@@ -6,5 +6,28 @@
   </head>
   <body>
     <h1><%= title %></h1>
+    <form action="" id="translationform">
+      Text to translate:<input type="text" name="transationtext">
+    <input type="submit" value="Submit">
+  </form>
+  <br />
+  From:
+  <select name="translationfrom" form="translationform">
+    <option value="EN">English</option>
+    <option value="FR">French</option>
+    <option value="ES">Spanish</option>
+  </select>
+  To:
+  <select name="translationto" form="translationform">
+    <option value="EN">English</option>
+    <option value="FR">French</option>
+    <option value="ES">Spanish</option>
+  </select>
   </body>
+  <br />
+  <footer>
+    <!--Required by Yandex to use their API, see
+    https://tech.yandex.com/translate/doc/dg/concepts/design-requirements-docpage/-->
+    Powered by <a href="http://translate.yandex.com/">Yandex.Translate</a>
+  </footer>
 </html>
