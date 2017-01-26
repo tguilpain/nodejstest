@@ -5,6 +5,7 @@ var MongoClient = require('mongodb').MongoClient;
 // Connection URL
 var url = 'mongodb://localhost:27017';
 var db;
+var collectionName = 'translations';
 
 // Use connect method to connect to the Server
 MongoClient.connect(url, function(err, initializedDb) {
@@ -19,13 +20,13 @@ MongoClient.connect(url, function(err, initializedDb) {
  * @param {String} text2 text1's translation into language2
  */
 var write = function (text1, language1, language2, text2) {
-  var collection = db.collection('translations');
-    collection.insert({
-      'text1' : text1,
-      'language1' : language1,
-      'text2' : text2,
-      'language2' : language2,
-    });
+  var collection = db.collection(collectionName);
+  collection.insert({
+    'text1' : text1,
+    'language1' : language1,
+    'text2' : text2,
+    'language2' : language2,
+  });
 };
 
 
@@ -37,7 +38,39 @@ var write = function (text1, language1, language2, text2) {
  * @returns {String} translation, empty string if not found.
  */
 function get(text, languageFrom, languageTo) {
-  //TODO
+  var collection = db.collection(collectionName);
+  console.log('In database Get');
+  return new Promise(function(fulfill, reject) {
+    console.log("just before find");
+    var results = collection.find({
+      'text1' : text,
+      'language1' : languageFrom,
+      'language2' : languageTo,
+    },{'text2': true}).toArray(function(err, results){
+      if (results.length > 0) {
+        // Found one result
+        var trans = results.shift().text2;
+        console.log(trans);
+        fulfill(trans);
+      }
+      else {
+        // Look the other way.
+        console.log('Search the other way');
+        results = collection.find({
+          'text2' : text,
+          'language1' : languageTo,
+          'language2' : languageFrom,
+        },{'text1': true}).toArray(function(err, results){
+          if (results.length > 0) {
+            // Found one result
+            var trans = results.shift().text1;
+            console.log(trans);
+            fulfill(trans);
+          }
+        });
+      }
+    });
+  })
 }
 
 // Encapsulate database interactions.

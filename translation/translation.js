@@ -20,6 +20,21 @@ module.exports = function(text, fromLanguage, toLanguage) {
         lang: fromLanguageLow + '-' + toLanguageLow
     };
 
+    var data = database.get(text, fromLanguageLow, toLanguageLow);
+    data.then(function (myresult) {
+      console.log('result:');
+      console.log(myresult);
+      if (myresult.length > 0) {
+        console.log('Return my result');
+        return new Promise(function(fulfill, reject) {fulfill(myresult + 'db')});
+      }
+      else {
+
+      }
+    });
+    console.log('after then');
+
+    // No record found in db, so we call the API.
     // Prepare request query
     var getRequest = {
         method: 'GET',
