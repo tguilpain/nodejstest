@@ -18,7 +18,7 @@ Create a folder where you would like to install this project, then clone it ther
 You can follow instructions on this from the [official github clone help](https://help.github.com/articles/cloning-a-repository/).
 
 ##3. Generate missing files and run the project.
-Open a command prompt and go to project's folder.
+Open a command prompt and go to the project's folder.
 Run the following commands.
 `npm install`
 This is downloading and installing all the project dependencies, it may take a while.
