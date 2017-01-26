@@ -21,6 +21,9 @@ router.get('/', function(req, res, next) {
         ).then(function(translationResult) {
           res.render('index', { title: 'Maltem back-end test', translatedText: translationResult});
       });
+  }
+  else {
+    res.render('index', { title: 'Maltem back-end test', translatedText: 'Your translation will appear here'});
   };
 });
 
