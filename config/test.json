@@ -1,0 +1,12 @@
+{
+  "translation": {
+    "mongoDb": {
+      "url": "mongodb://localhost:27017",
+      "collectionName": "translations"
+    },
+    "yandexApi": {
+      "uri": "https://translate.yandex.net/api/v1.5/tr.json/translate",
+      "apiKey": "trnsl.1.1.20170125T033742Z.57d5d2f9676c8356.0684e3202007b52728603c6fdf2b54c0fbaa150a"
+    }
+  }
+}

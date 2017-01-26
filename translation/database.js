@@ -1,13 +1,14 @@
 // Manage interactions with mongodb.
 
 var MongoClient = require('mongodb').MongoClient;
+var config = require('config');
 
-// Connection URL
-var url = 'mongodb://localhost:27017';
-var db;
-var collectionName = 'translations';
+// Get mongoDb's config.
+var url = config.get('translation.mongoDb.url');
+var collectionName = config.get('translation.mongoDb.collectionName');
 
 // Use connect method to connect to the Server
+var db;
 MongoClient.connect(url, function(err, initializedDb) {
   db = initializedDb;
 });

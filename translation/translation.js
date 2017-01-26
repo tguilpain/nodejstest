@@ -2,6 +2,10 @@
 
 var request = require('request');
 var database = require('./database');
+var config = require('config');
+
+var apiKey = config.get('translation.yandexApi.apiKey');
+var apiUri = config.get('translation.yandexApi.uri');
 
 /**
  * Returns the translation of the given text
@@ -15,7 +19,7 @@ module.exports = function(text, fromLanguage, toLanguage) {
     var fromLanguageLow = fromLanguage.toLowerCase();
     var toLanguageLow = toLanguage.toLowerCase();
     var queryString = {
-        key: 'trnsl.1.1.20170125T033742Z.57d5d2f9676c8356.0684e3202007b52728603c6fdf2b54c0fbaa150a',
+        key: apiKey,
         text: text,
         lang: fromLanguageLow + '-' + toLanguageLow
     };
@@ -26,7 +30,7 @@ module.exports = function(text, fromLanguage, toLanguage) {
         return new Promise(function(fulfill, reject) {fulfill(myresult + 'db')});
       }
       else {
-
+        //TODO
       }
     });
 
@@ -34,7 +38,7 @@ module.exports = function(text, fromLanguage, toLanguage) {
     // Prepare request query
     var getRequest = {
         method: 'GET',
-        uri: 'https://translate.yandex.net/api/v1.5/tr.json/translate',
+        uri: apiUri,
         qs: queryString
     };
     return new Promise(function(fulfill, reject) {
