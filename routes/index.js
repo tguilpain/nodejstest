@@ -18,9 +18,8 @@ router.get('/', function(req, res, next) {
         req.query.transationtext,
         req.query.translationfrom,
         req.query.translationto
-      ).then(function(translationResult) {
-        res.render('index', { title: 'Maltem back-end test', translatedText: translationResult});
-
+        ).then(function(translationResult) {
+          res.render('index', { title: 'Maltem back-end test', translatedText: translationResult});
       });
   };
 });
