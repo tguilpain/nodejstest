@@ -25,45 +25,40 @@ module.exports = function(text, fromLanguage, toLanguage) {
     };
 
     var data = database.get(text, fromLanguageLow, toLanguageLow);
-    data.then(function (myresult) {
-      if (myresult.length > 0) {
-        return new Promise(function(fulfill, reject) {fulfill(myresult + 'db')});
+    return data.catch(function () {
+
+            // No record found in db, so we call the API.
+            // Prepare request query.
+            var getRequest = {
+                method: 'GET',
+                uri: apiUri,
+                qs: queryString
+            };
+            return new Promise(function(fulfill, reject) {
+                request(getRequest, function(error, response, body) {
+                    // Body is the decompressed response body.
+                    if (!error
+                      && response.statusCode == 200
+                      && typeof body.text !== undefined) {
+                        try {
+                            // Throws an exception if body is not a perfect JSON.
+                            var parsedJson = JSON.parse(body);
+                            var translatedText = parsedJson.text.shift();
+                        }
+                        catch(err) {
+                            reject(err);
+                        }
+
+                        // Write new translation into datbase.
+                        database.write(text, fromLanguageLow, toLanguageLow, translatedText);
+
+                        // Return translation.
+                        fulfill(translatedText);
+                    } else {
+                        reject(error);
+                    }
+                })
+            });
       }
-      else {
-        //TODO
-      }
-    });
-
-    // No record found in db, so we call the API.
-    // Prepare request query
-    var getRequest = {
-        method: 'GET',
-        uri: apiUri,
-        qs: queryString
-    };
-    return new Promise(function(fulfill, reject) {
-        request(getRequest, function(error, response, body) {
-            // body is the decompressed response body
-            if (!error
-              && response.statusCode == 200
-              && typeof body.text !== undefined) {
-                try {
-                    // Throws an exception if body is not a perfect JSON.
-                    var parsedJson = JSON.parse(body);
-                    var translatedText = parsedJson.text.shift();
-                }
-                catch(err) {
-                    reject(err);
-                }
-
-                // Write new translation into datbase.
-                database.write(text, fromLanguageLow, toLanguageLow, translatedText);
-
-                // Return translation.
-                fulfill(translatedText);
-            } else {
-                reject(error);
-            }
-        })
-    });
+    );
 };
