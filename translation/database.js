@@ -39,9 +39,7 @@ var write = function (text1, language1, language2, text2) {
  */
 function get(text, languageFrom, languageTo) {
   var collection = db.collection(collectionName);
-  console.log('In database Get');
   return new Promise(function(fulfill, reject) {
-    console.log("just before find");
     var results = collection.find({
       'text1' : text,
       'language1' : languageFrom,
@@ -49,13 +47,11 @@ function get(text, languageFrom, languageTo) {
     },{'text2': true}).toArray(function(err, results){
       if (results.length > 0) {
         // Found one result
-        var trans = results.shift().text2;
-        console.log(trans);
-        fulfill(trans);
+        var translation = results.shift().text2;
+        fulfill(translation);
       }
       else {
         // Look the other way.
-        console.log('Search the other way');
         results = collection.find({
           'text2' : text,
           'language1' : languageTo,
@@ -63,9 +59,8 @@ function get(text, languageFrom, languageTo) {
         },{'text1': true}).toArray(function(err, results){
           if (results.length > 0) {
             // Found one result
-            var trans = results.shift().text1;
-            console.log(trans);
-            fulfill(trans);
+            var translation = results.shift().text1;
+            fulfill(translation);
           }
         });
       }

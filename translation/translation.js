@@ -22,17 +22,13 @@ module.exports = function(text, fromLanguage, toLanguage) {
 
     var data = database.get(text, fromLanguageLow, toLanguageLow);
     data.then(function (myresult) {
-      console.log('result:');
-      console.log(myresult);
       if (myresult.length > 0) {
-        console.log('Return my result');
         return new Promise(function(fulfill, reject) {fulfill(myresult + 'db')});
       }
       else {
 
       }
     });
-    console.log('after then');
 
     // No record found in db, so we call the API.
     // Prepare request query
@@ -47,10 +43,14 @@ module.exports = function(text, fromLanguage, toLanguage) {
             if (!error
               && response.statusCode == 200
               && typeof body.text !== undefined) {
-                // CATCH SYNTAX ERROR EXCEPTION IF JSON WRONG FORMAT
-                // TODO
-                var parsedJson = JSON.parse(body);
-                var translatedText = parsedJson.text.shift();
+                try {
+                    // Throws an exception if body is not a perfect JSON.
+                    var parsedJson = JSON.parse(body);
+                    var translatedText = parsedJson.text.shift();
+                }
+                catch(err) {
+                    reject(err);
+                }
 
                 // Write new translation into datbase.
                 database.write(text, fromLanguageLow, toLanguageLow, translatedText);
@@ -58,8 +58,6 @@ module.exports = function(text, fromLanguage, toLanguage) {
                 // Return translation.
                 fulfill(translatedText);
             } else {
-                console.log('Request failed');
-                console.log(error);
                 reject(error);
             }
         })
